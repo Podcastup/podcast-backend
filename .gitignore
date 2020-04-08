@@ -1,2 +1,15 @@
+# dependencies
+node_modules/
+/config
+
+# misc
+yarn.lock
+yarn-error.log
+package-lock.json
+dev.env
+test.env
+
+# file: ~/.gitignore_global
+.DS_Store
 .idea
-./idea
+.idea/**

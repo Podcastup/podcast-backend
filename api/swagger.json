@@ -1,0 +1,494 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Grid API",
+    "description": "API documentation for the Grid Knowingo Project",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:8000",
+  "basePath": "",
+  "tags": [
+    {
+      "name": "Users",
+      "description": "API for users in the system"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/user": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get all users in the system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/users"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Create a user",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User we want to create",
+            "schema": {
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/users"
+            }
+          },
+          "400": {
+            "description": "User with that email already exists"
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Login a user",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Login a user",
+            "schema": {
+              "properties": {
+                "email": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "User with that email does not exists"
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "integer",
+          "required": true
+        }
+
+      ],
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "GET a user",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/users"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User Not Found"
+          }
+        }
+      },
+      "put": {
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "description": "ID of the user we want to edit",
+            "schema": {
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                }
+              }
+            }
+          }],
+        "tags": [
+          "Users"
+        ],
+        "summary": "Edit a user",
+        "responses": {
+          "201": {
+            "description": "User successfully updated"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User Not Found"
+          }
+        }
+      },
+      "delete": {
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          }],
+        "tags": [
+          "Users"
+        ],
+        "summary": "Delete a user",
+        "responses": {
+          "201": {
+            "description": "User successfully deleted"
+          },
+          "400": {
+            "description": "User successfully updated"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User Not Found"
+          }
+        }
+      }
+    },
+    "/admin": {
+      "get": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Get all admins in the system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/admins"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Create an admin",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Admin user we want to create",
+            "schema": {
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/admins"
+            }
+          },
+          "400": {
+            "description": "Admin with that email already exists"
+          }
+        }
+      }
+    },
+    "/admin/login": {
+      "post": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Login an admin user",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Login a user",
+            "schema": {
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Access token"
+          },
+          "400": {
+            "description": "Admin with that email already exists"
+          }
+        }
+      }
+    },
+    "/admin/me": {
+      "parameters": [
+        {
+          "name": "authorization",
+          "in": "header",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "get": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "GET the logged in admin",
+        "responses": {
+          "200": {
+            "description": "Access token"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/admin/{id}": {
+      "parameters": [
+        {
+          "name": "authorization",
+          "in": "header",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "id",
+          "in": "path",
+          "type": "integer",
+          "required": true
+        }
+      ],
+      "get": {
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "required": true,
+          "description": "ID of the admin we want to edit",
+          "schema": {
+            "properties": {
+              "email": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              }
+            }
+          }
+        }],
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Edit an admin",
+        "responses": {
+          "201": {
+            "description": "Admin updated successfully"
+          },
+          "400": {
+            "description": "Admin successfully updated"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Admin user does not exist"
+          }
+        }
+      },
+      "put": {
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "required": true,
+          "description": "ID of the admin we want to edit",
+          "schema": {
+            "properties": {
+              "email": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              }
+            }
+          }
+        }],
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Edit an admin",
+        "responses": {
+          "201": {
+            "description": "Admin updated successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Admin user does not exist"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Delete an admin",
+        "responses": {
+          "201": {
+            "description": "Admin successfully deleted"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Admin user does not exist"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "users": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "firstName": {
+              "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            }
+          }
+        }
+
+      }
+    },
+    "admins": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "firstName": {
+              "type": "string"
+            },
+            "lastName": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        }
+
+      }
+    }
+  }
+}
