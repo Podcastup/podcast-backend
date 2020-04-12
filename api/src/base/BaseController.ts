@@ -49,8 +49,8 @@ export default class BaseController implements IController{
      */
 
     public async deleteRecord(req: Request, res:Response){
-        const { params: { uuid } }  = req;
-        const options = { where: { uuid } };
+        const { params: { id } }  = req;
+        const options = { where: { id } };
         await this.service.deleteOne(options);
         return res.status(201).send({
             message: `${this.modelName} deleted successfully`,
@@ -64,8 +64,8 @@ export default class BaseController implements IController{
      */
 
     public async findOneRecord(req: Request, res:Response){
-        const {params:{ uuid }, body} = req;
-        const options = { where: { uuid } };
+        const {params:{ id }, body} = req;
+        const options = { where: { id } };
         const result = await this.service.updateOne(body, options);
 
         if(!result){
@@ -81,8 +81,8 @@ export default class BaseController implements IController{
      */
 
     public async updateRecord(req: Request, res:Response){
-        const {params:{ uuid }, body} = req;
-        const options = { where: { uuid } };
+        const {params:{ id }, body} = req;
+        const options = { where: { id } };
         const result = await this.service.updateOne(body, options);
 
         return res.status(201).json({

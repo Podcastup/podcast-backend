@@ -1,4 +1,6 @@
 import nodemailer from 'nodemailer';
+const dotEnv = require("dotenv");
+dotEnv.config();
 
 export const transporter = () =>{
     // create reusable transporter object using the default SMTP transport
@@ -12,11 +14,11 @@ export const transporter = () =>{
 
 };
 
-export const sendMail = async (email, token) =>{
+export const sendMail = async (email, token, subject) =>{
     let info = await transporter().sendMail({
-        from: `"Grid 👻" <${email}>`, // sender address
-        to: "paulnsereko8@gmail.com", // list of receivers
-        subject: "Login Url", // Subject line
+        from: `"Podcaster 👻" <paulnsereko@gmail.com>`, // sender address
+        to: `${email}`, // list of receivers
+        subject: `${subject}`, // Subject line
         text: "The URL text", // plain text body
         html: `
                 <pre>Please see below your URL login link</pre>

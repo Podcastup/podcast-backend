@@ -19,12 +19,35 @@ router.post(
         [Segments.BODY]: Joi.object().keys({
             email: Joi.string().required().email(),
             password: Joi.string().required(),
+            confirmPassword: Joi.string().required(),
             firstName: Joi.string().required(),
             lastName: Joi.string().required()
         }),
     }),
     (req: Request, res: Response, next: NextFunction) => adminController.createRecord(req, res),
 );
+
+router.post(
+    "/admin/sendResetLink",
+    celebrate({
+        [Segments.BODY]: Joi.object().keys({
+            email: Joi.string().required().email(),
+        }),
+    }),
+    (req: Request, res: Response, next: NextFunction) => adminController.sendResetLink(req, res),
+);
+
+router.put(
+    "/admin/resetPassword/:id",
+    celebrate({
+        [Segments.BODY]: Joi.object().keys({
+            password: Joi.string().required(),
+            confirmPassword: Joi.string().required()
+        }),
+    }),
+    (req: Request, res: Response, next: NextFunction) => adminController.resetPassword(req, res),
+);
+
 
 router.get(
     "/admin",

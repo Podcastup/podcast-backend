@@ -7,6 +7,7 @@ import {
 import {adminService} from "../services";
 import { IAdmin } from "../services/admin-service";
 import { HttpResponse, Validator } from "../utils";
+import {sendMail} from "../helpers/sendmail";
 
 export interface IRequest extends Request {
     admin: IAdmin;
@@ -37,12 +38,12 @@ export default class AdminController extends BaseController{
             email: admin.email,
             uuid: admin.uuid,
             id: admin.id
-        }
+        };
 
         const data = {
             ...payload,
             access_token: await TokenHelper.generateToken(payload)
-        }
+        };
         accessToken = data.access_token;
         return matchedPassword ?
             HttpResponse.sendResponse(res, true, 200, null as any, data) :
@@ -51,9 +52,18 @@ export default class AdminController extends BaseController{
     }
 
     public  async createRecord(req:Request, res: Response) {
+
+        const {password, email, confirmPassword} = req.body;
+
+        Validator.validateEmail(email);
+        Validator.validatePassword(password);
+        if(confirmPassword !== password){
+            return HttpResponse.sendErrorResponse(res, 400, null, Error("Please confirm that the passwords are equal"));
+        }
+
         //check if the user exists;
         if(await this.service.findOne({where: {email: req.body.email}})){
-            return HttpResponse.sendErrorResponse(res, 409, "Admin with that email already exists", Error("Admin with that email already exists"));
+            return HttpResponse.sendErrorResponse(res, 400, "Admin with that email already exists", Error("Admin with that email already exists"));
         } else {
             return super.createRecord(req, res);
         }
@@ -92,6 +102,51 @@ export default class AdminController extends BaseController{
         };
         return HttpResponse.sendResponse(res, true, 200, null as any, data);
     };
+
+    public async sendResetLink(req:Request, res:Response){
+        const {email} = req.body;
+        const user = await this.service.findOne({where: {email}}, false);
+        if(!user){
+            return HttpResponse.sendResponse(
+                res,
+                false,
+                400,
+                "user with that email doesn't exist",
+            )
+        } else {
+            const payload = {
+                email: user.email,
+                uuid: user.uuid,
+                id: user.id
+            };
+
+            const data = {
+                ...payload,
+                access_token: await TokenHelper.generateToken(payload)
+            }
+
+            const subject = 'Password reset Link';
+
+            await  sendMail(email, data.access_token, subject);
+            return HttpResponse.sendResponse(res,true, 201, "Email Link Sent");
+        }
+    }
+
+    public async resetPassword(req:Request, res:Response){
+        const {id} = req.params;
+        const decoded =await TokenHelper.decodeToken(id);
+        console.log(decoded, 'the token');
+
+        const data = {
+            email: decoded.email,
+            access_token: id
+        };
+        console.log(data,'the data');
+        if(await this.service.findOne({where: {email: data.email}})){
+            console.log('got here');
+            return super.updateRecord(req, res);
+        }
+    }
 
 
 }
