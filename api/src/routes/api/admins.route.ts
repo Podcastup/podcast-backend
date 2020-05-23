@@ -26,6 +26,18 @@ router.post(
     (req: Request, res: Response, next: NextFunction) => adminController.createRecord(req, res),
 );
 
+router.post(
+    "/admin/forgotPassword",
+    celebrate({
+        [Segments.BODY]: Joi.object().keys({
+            email: Joi.string().required().email(),
+            buttonLink: Joi.string().required(),
+            buttonText: Joi.string().required()
+        }),
+    }),
+    (req: Request, res: Response, next: NextFunction) => adminController.forgotPassword(req, res, next),
+);
+
 router.get(
     "/admin",
     (req: Request, res: Response, next: NextFunction) => adminController.findAllRecords(req, res),
