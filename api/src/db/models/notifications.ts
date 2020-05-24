@@ -1,14 +1,11 @@
 import {DataTypes, Model} from "sequelize";
 import uuidv4 from "uuid/v4";
 import {db} from ".";
-import {PasswordHelper} from "../../helpers";
 
-
-export class Admin extends Model {
-    public password?: string;
+export class Notifications extends Model {
 }
 
-Admin.init({
+Notifications.init({
     id: {
         autoIncrement: true,
         primaryKey: true,
@@ -27,42 +24,40 @@ Admin.init({
             },
         },
     },
-    password: {
+    event: {
         allowNull: false,
         type: DataTypes.STRING,
         validate: {
             notNull: {
-                msg: "A password must be provided",
+                msg: "An event must be provided",
             },
         },
     },
-    firstName: {
+    message: {
+        allowNull: false,
+        type: DataTypes.STRING,
+    },
+    buttonLink: {
         allowNull: false,
         type: DataTypes.STRING,
         validate: {
             notNull: {
-                msg: "A first name must be provided",
+                msg: "A button link must be provided",
             },
         },
     },
-    lastName: {
+    buttonText: {
         allowNull: false,
         type: DataTypes.STRING,
         validate: {
             notNull: {
-                msg: "A last name must be provided",
+                msg: "A button text must be provided",
             },
         },
     },
-    createdAt: {
-        type: DataTypes.DATE,
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-    },
-}, {tableName: "Admins", sequelize: db.sequelize});
+}, {tableName:"Notifications", sequelize:db.sequelize});
 
-Admin.beforeCreate(async (admin, options) => {
-    admin.password = await PasswordHelper.hashPassword(admin.password as any);
+Notifications.beforeCreate((notifications, options) =>{
+
 });
-Admin.sync();
+Notifications.sync();
