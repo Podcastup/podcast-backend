@@ -42,6 +42,14 @@ yarn run start
 ```
 
 
+## Run app with docker
+
+```
+sudo docker-compose -f docker-compose.local.yml up --build
+```
+
+
+
 
 ## Development Tools
 - [Node](https://nodejs.org/en/)

@@ -6,4 +6,4 @@ COPY ./ ./
 
 EXPOSE 8000
 RUN npm install && npm run build
-CMD ["/bin/bash", "node_modules"]
+CMD ["npm", "start"]
