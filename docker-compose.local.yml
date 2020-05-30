@@ -1,0 +1,97 @@
+version: '3'
+
+services:
+  apiPodcast:
+    container_name: apiPodcast
+    image: node:13.10.1
+    restart: always
+    volumes:
+      - ./api:/var/www/html/api
+    command: npm run watch
+
+    working_dir: /var/www/html/api/src
+    environment:
+      PORT: 8000
+      JWT_SECRET: secret_key
+      DATABASE_URL: postgres://admin:secret@postgres/podcast
+      DATABASE_URL_INIT: postgres://sally:secret@postgres/template1
+      POSTGRES_USER: admin
+      POSTGRES_DATABASE: podcast
+      POSTGRES_PASSWORD: secret
+      POSTGRES_HOST: postgres
+    depends_on:
+      - postgres
+    networks:
+      - internal
+    ports:
+      - "8000:8000"
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_DATABASE: podcast
+      POSTGRES_PASSWORD: secret
+      POSTGRES_HOST: postgres
+    networks:
+      - internal
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  pgadminPodcast:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: pwdpwd
+    networks:
+      - internal
+    volumes:
+      - pgadmin:/root/.pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+  mailPodcast:
+    container_name: mailPodcast
+    restart: always
+    image: node:13.10.1
+    volumes:
+      - ./mailService:/var/www/html/mailService
+    command: npm run dev
+    networks:
+      - internal
+    working_dir: /var/www/html/mailService/src
+    environment:
+      JWT_SECRET: secret_key
+      PORT: 7000
+    ports:
+      - "7000:7000"
+    links:
+      - apiPodcast
+
+  mailServicePodcastWatch:
+    container_name: mailPodcast_watch
+    restart: always
+    image: node:13.10.1
+    volumes:
+      - ./mailService:/var/www/html/mailService
+    command: npm run watch
+    networks:
+      - internal
+    working_dir: /var/www/html/mailService/src
+    depends_on:
+      - mailPodcast
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  pgdata:
+  pgadmin:
+  sync:
+  api:

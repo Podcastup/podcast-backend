@@ -14,7 +14,7 @@ export interface IRequest extends Request {
     admin: IAdmin;
 }
 
-let accessToken;
+
 
 export default class AdminController extends BaseController{
     /**
@@ -33,7 +33,7 @@ export default class AdminController extends BaseController{
                 "user with that email doesn't exist",
             )
         }
-        const matchedPassword = await PasswordHelper.comparePassword(password, admin.password)
+        const matchedPassword = await PasswordHelper.comparePassword(password, admin.password);
 
         const payload = {
             email: admin.email,
@@ -45,7 +45,6 @@ export default class AdminController extends BaseController{
             ...payload,
             access_token: await TokenHelper.generateToken(payload)
         };
-        accessToken = data.access_token;
         return matchedPassword ?
             HttpResponse.sendResponse(res, true, 200, null as any, data) :
             HttpResponse.sendResponse(res, false, 400,
@@ -56,10 +55,9 @@ export default class AdminController extends BaseController{
         if (req && req.headers && req.headers.authorization) {
             const token =
                 req.headers.authorization.split(' ').pop() || '';
-            const data = await tokenService.createOne({token});
+            await tokenService.createOne({token});
             return res.status(201).json({
-                data,
-                message: 'Token created successfully',
+                message: 'Token have successfully logged out',
                 success: true,
             });
 
@@ -201,6 +199,13 @@ export default class AdminController extends BaseController{
     }
 
     public  async createRecord(req:Request, res: Response) {
+        const regex = /^(?=(.*[\W])+)(?=(.*?[A-Z])+)(?!.*\s).{7,32}$/;
+        if(!regex.test(req.body.password)){
+            return HttpResponse.sendErrorResponse
+            (res, 400, "Password Error",
+                Error("Please enter a password. It must contain a special character, a capital, and be 7-32 characters long"
+                ));
+        }
         //check if the user exists;
         if(await this.service.findOne({where: {email: req.body.email}})){
             return HttpResponse.sendErrorResponse(res, 409, "Admin with that email already exists", Error("Admin with that email already exists"));
@@ -211,36 +216,70 @@ export default class AdminController extends BaseController{
     }
 
     public  async updateRecord(req:Request, res: Response) {
-        //check if the user exists;
-        if(await this.service.findOne({where: {uuid: req.params.uuid}})){
-            return super.updateRecord(req, res);
-        } else {
-            return HttpResponse.sendErrorResponse(res, 404, "Admin user does not exist", Error("Admin user does not exist"));
+        if (req && req.headers && req.headers.authorization) {
+            const token =
+                req.headers.authorization.split(' ').pop() || '';
 
+            const checkToken = await tokenService.findOne({where: {token}});
+            if (checkToken) {
+                return res.status(409).send({
+                    message:
+                        'You are not authorized to access this resource, please log in',
+                });
+            }
+            //check if the user exists;
+            if (await this.service.findOne({where: {uuid: req.params.uuid}})) {
+                return super.updateRecord(req, res);
+            } else {
+                return HttpResponse.sendErrorResponse(res, 404, "Admin user does not exist", Error("Admin user does not exist"));
+
+            }
         }
 
     }
 
     public  async deleteRecord(req:Request, res: Response) {
-        //check if the user exists;
-        if(await this.service.findOne({where: {uuid: req.params.uuid}})){
-            return super.deleteRecord(req, res);
-        } else {
-            return HttpResponse.sendErrorResponse(res, 404, "Admin user does not exist", Error("Admin user does not exist"));
+        if (req && req.headers && req.headers.authorization) {
+            const token =
+                req.headers.authorization.split(' ').pop() || '';
+            const checkToken = await tokenService.findOne({where: {token}});
+            if(checkToken){
+                return res.status(409).send({
+                    message:
+                        'You are not authorized to access this resource, please log in',
+                });
+            }
+            //check if the user exists;
+            if (await this.service.findOne({where: {uuid: req.params.uuid}})) {
+                return super.deleteRecord(req, res);
+            } else {
+                return HttpResponse.sendErrorResponse(res, 404, "Admin user does not exist", Error("Admin user does not exist"));
 
+            }
         }
-
     }
 
     public async getCurrentUser(req:Request, res: Response) {
+        if (req && req.headers && req.headers.authorization) {
+            const token =
+                req.headers.authorization.split(' ').pop() || '';
 
-        const decodedToken = await TokenHelper.decodeToken(accessToken);
-        const data = {
-            email: decodedToken.email,
-            uuid: decodedToken.uuid,
-            id: decodedToken.id
-        };
-        return HttpResponse.sendResponse(res, true, 200, null as any, data);
+            const checkToken = await tokenService.findOne({where: {token}});
+            if(checkToken){
+                return res.status(409).send({
+                    message:
+                        'You are not authorized to access this resource, please log in',
+                });
+            }
+            const decodedToken = await TokenHelper.decodeToken(token);
+            const data = {
+                email: decodedToken.email,
+                uuid: decodedToken.uuid,
+                id: decodedToken.id
+            };
+            const user = await this.service.findOne({where: {email: data.email}});
+            return HttpResponse.sendResponse(res, true, 200, null as any, user);
+        }
     };
 
     public async upcomingEvent(req:Request, res:Response, next:NextFunction){
