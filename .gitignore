@@ -114,3 +114,6 @@ package-lock.json
 /lib
 
 *.pem
+
+#postgres
+/pgdata

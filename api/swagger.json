@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "Grid API",
-    "description": "API documentation for the Grid Knowingo Project",
+    "title": "Podcaster API",
+    "description": "API documentation for the Podcaster Project",
     "license": {
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
@@ -13,8 +13,8 @@
   "basePath": "",
   "tags": [
     {
-      "name": "Users",
-      "description": "API for users in the system"
+      "name": "Podcaster",
+      "description": "API for the podcaster podcast app"
     }
   ],
   "schemes": [
@@ -277,7 +277,7 @@
     "/admin/login": {
       "post": {
         "tags": [
-          "Admins"
+          "Auth"
         ],
         "summary": "Login an admin user",
         "parameters": [
@@ -303,6 +303,27 @@
           },
           "400": {
             "description": "Admin with that email already exists"
+          }
+        }
+      }
+    },
+    "/admin/logout": {
+      "post": {
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Logout a user",
+        "responses": {
+          "200": {
+            "description": ""
           }
         }
       }

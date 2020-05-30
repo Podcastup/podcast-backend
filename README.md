@@ -3,44 +3,14 @@
 ## Backend
 
 ### Installation
-```
-cd ~/path/to/podcast-backend/api
-yarn install
-```
+
+Download docker [here](https://www.docker.com/products/docker-desktop)
+
+## Run api with docker
 
 ```
-cd ~/path/to/podcast-backend/mailService
-yarn install
+sudo docker-compose -f docker-compose.local.yml up --build
 ```
-
-### Development Start
-
-`API`
-
-Open the terminal and run:
-```
-cd ~/path/to/podcast-backend/api
-yarn run watch
-```
-
-Then in a second terminal run:
-```
-cd ~/path/to/podcast-backend/api
-yarn run start
-```
-
-`Mail Service`
-```
-cd ~/path/to/podcast-backend/mailService
-yarn run watch
-```
-
-Then in a second terminal run:
-```
-cd ~/path/to/podcast-backend/mailService
-yarn run start
-```
-
 
 
 ## Development Tools
