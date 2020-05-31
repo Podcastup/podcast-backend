@@ -7,7 +7,7 @@
     "start": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/index.ts",
     "dev": "ts-node src/index.ts",
     "db:migrate": "node_modules/.bin/sequelize db:migrate --migrations-path ./src/db/migrations",
-    "test": "env-cmd -f jest --forceExit --detectOpenHandles --coverage",
+    "test": "env-cmd -f ./src/config/test.env jest --forceExit --detectOpenHandles --coverage",
     "travis": "jest  --forceExit --detectOpenHandles --coverage",
     "lint": "./node_modules/.bin/tslint --init",
     "watch": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/index.ts",
