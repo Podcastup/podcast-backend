@@ -4,6 +4,7 @@ import BaseService from "../base/BaseService";
 import { User } from "../db/models/user";
 
 export interface IUser {
+    password?: string;
     id?: number;
     email?: string;
     firstName?:string;
@@ -14,11 +15,10 @@ export interface IUser {
 
 export default class UserService extends BaseService<IUser> {
     constructor() {
-        super(User, []);
+        super(User, ["password"]);
     }
 
     public async findAll(options: FindOptions, exclude?: boolean): Promise<IUser[]> {
-        console.log(User, ': got here on the user model');
         return super.findAll(options, true);
     }
 

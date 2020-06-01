@@ -16,6 +16,7 @@ router.post(
     celebrate({
         [Segments.BODY]: Joi.object().keys({
             email: Joi.string().required().email(),
+            password: Joi.string().required(),
             firstName: Joi.string().required(),
             lastName: Joi.string().required()
         }),
@@ -25,6 +26,12 @@ router.post(
 
 router.post(
     "/user/login",
+    celebrate({
+        [Segments.BODY]: Joi.object().keys({
+            email: Joi.string().required().email(),
+            password: Joi.string().required()
+        }),
+    }),
     (req:Request, res:Response, next:NextFunction) => userController.loginUser(req,res),
 );
 
