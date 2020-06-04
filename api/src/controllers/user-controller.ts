@@ -46,6 +46,7 @@ export default class UserController extends BaseController {
         }
         const matchedPassword = await PasswordHelper.comparePassword(password, user.password);
         const payload = {
+            role:"user",
             email: user.email,
             uuid: user.uuid,
             id: user.id

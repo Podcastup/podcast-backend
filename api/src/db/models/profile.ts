@@ -26,6 +26,10 @@ Profile.init({
         allowNull: false,
         type: DataTypes.STRING,
     },
+    userId:{
+        allowNull: false,
+        type: DataTypes.STRING,
+    },
     bio: {
         allowNull: false,
         type: DataTypes.STRING,

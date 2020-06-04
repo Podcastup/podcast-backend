@@ -12,5 +12,11 @@ router.get(
     (req: Request, res: Response, next: NextFunction) => profileController.getCurrentUser(req, res),
 );
 
+router.put(
+    "/profile/update",
+    passport.authenticate('jwt', { session: false }, null),
+    (req: Request, res: Response, next: NextFunction) => profileController.update(req, res),
+);
+
 
 export default router;

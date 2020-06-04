@@ -36,6 +36,7 @@ export default class AdminController extends BaseController{
         const matchedPassword = await PasswordHelper.comparePassword(password, admin.password);
 
         const payload = {
+            role:"admin",
             email: admin.email,
             uuid: admin.uuid,
             id: admin.id
