@@ -72,7 +72,7 @@ class PostgresInit {
             }
           })
           .catch(err => {
-            console.log("PostgresInit: Error: Can't create database: ", err)
+            console.log("PostgresInit: Error: Can't create database: ", err);
             reject(err);
           });
     });
