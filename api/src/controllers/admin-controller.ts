@@ -228,7 +228,7 @@ export default class AdminController extends BaseController{
                 });
             }
             //check if the user exists;
-            if (await this.service.findOne({where: {uuid: req.params.uuid}})) {
+            if (await this.service.findOne({where: {id: req.params.id}})) {
                 return super.updateRecord(req, res);
             } else {
                 return HttpResponse.sendErrorResponse(res, 404, "Admin user does not exist", Error("Admin user does not exist"));

@@ -1,6 +1,7 @@
 import {DataTypes, Model} from "sequelize";
 import uuidv4 from "uuid/v4";
 import {db} from ".";
+import {PasswordHelper} from "../../helpers";
 
 
 export class User extends Model {
@@ -27,6 +28,15 @@ User.init({
       },
     },
   },
+  password: {
+    allowNull: false,
+    type: DataTypes.STRING,
+    validate: {
+      notNull: {
+        msg: "A password must be provided",
+      },
+    },
+  },
   firstName: {
     allowNull: false,
     type: DataTypes.STRING,
@@ -45,6 +55,7 @@ User.init({
       },
     },
   },
+
   createdAt: {
     type: DataTypes.DATE,
   },
@@ -54,5 +65,6 @@ User.init({
 }, {tableName: "Users", sequelize: db.sequelize});
 
 User.beforeCreate(async (user, options) => {
+  user.password = await PasswordHelper.hashPassword(user.password as any);
 });
-User.sync()
+User.sync();
