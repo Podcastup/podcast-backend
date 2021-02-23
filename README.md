@@ -1,5 +1,13 @@
 # Podcaster
 
+
+## Setup
+remember to run the `export `scripts
+
+```
+export DATABASE_URL=postgresql://postgres@localhost/podcast
+```
+
 ## Backend
 
 ### Installation
