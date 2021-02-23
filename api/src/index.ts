@@ -28,10 +28,11 @@ class API {
             next();
         });
         app.use(errors());
-
-        app.listen(port, () => {
-            console.log(`Server successfully running on port ${port}`);
-        });
+        if (!module.parent) {
+            app.listen(port, () => {
+                console.log(`Server successfully running on port ${port}`);
+            });
+        }
     }
 }
 

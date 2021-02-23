@@ -17,8 +17,7 @@ class PostgresInit {
   db;
 
   constructor(){
-    let sequelizeInitURL = `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}/template1`;
-    this.db = new Sequelize(sequelizeInitURL);
+    this.db = new Sequelize(process.env.DATABASE_URL);
   }
 
   async init(){
@@ -26,6 +25,7 @@ class PostgresInit {
     if(!exists){
       await this.createDatabase();
     }
+    await this.databaseExists();
     await this.grantAccess();
   }
 
@@ -46,7 +46,8 @@ class PostgresInit {
 
   async createDatabase(){
     return new Promise((resolve, reject) => {
-      const createQuery = `CREATE DATABASE ${process.env.POSTGRES_DATABASE} WITH OWNER = ${process.env.POSTGRES_USER} ENCODING = 'UTF8';`
+      const createQuery = `CREATE DATABASE ${process.env.POSTGRES_DATABASE} WITH OWNER = ${process.env.POSTGRES_USER} ENCODING = 'UTF8';`;
+
       this.db.query(createQuery)
           .then(() => {
             console.log(`PostgresInit: Database [${process.env.POSTGRES_DATABASE}] created`)
@@ -72,7 +73,7 @@ class PostgresInit {
             }
           })
           .catch(err => {
-            console.log("PostgresInit: Error: Can't create database: ", err);
+            console.log("PostgresInit: The database does not exist: ", err);
             reject(err);
           });
     });
