@@ -18,6 +18,12 @@ export default class UserController extends BaseController {
      * @param  {Response} res
      */
 
+    public async testRoute(req:Request, res: Response){
+
+        return res.status(200).send({message:'ok'});
+
+    }
+
     public async getLoggedInUser(req:Request, res: Response){
         const {token} = req.params;
         const decoded =await TokenHelper.decodeToken(token);

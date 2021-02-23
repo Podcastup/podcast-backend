@@ -6,6 +6,10 @@ import {IRequest, userController} from "../../controllers/user-controller";
 
 const router = Router();
 
+router.get("/user/test",
+    (req: Request, res: Response) => userController.testRoute(req, res),
+    );
+
 router.get(
     "/user/login/:token",
     (req: Request, res: Response, next: NextFunction) => userController.getLoggedInUser(req, res),
